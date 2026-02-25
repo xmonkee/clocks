@@ -86,10 +86,15 @@
 	ctx.textBaseline = 'middle';
 
 
-	const times = Array.from({ length: 20 }, () => Math.round(Math.random() * 60 * 12 - 1));
+	const times = [0]
+	for (let i = 1; i < 12; i++) {
+		times.push(times[i - 1] + 70);
+	}
 
 
 	function loop(timestamp) {
+		ctx.save();
+		ctx.clearRect(0, 0, rct.width, rct.height);
 		ctx.translate(R + 80, R + 10);
 
 		// Rows
@@ -99,8 +104,8 @@
 				ctx.save();
 				ctx.translate(c * (2 * R + 50), r * (2 * R + 60));
 
-				const _mins = times[r * 4 + c];
-				const mins = Math.round(_mins % 60);
+				const _mins = times[r * 4 + c] + timestamp / 1000;
+				const mins = Math.floor(_mins % 60);
 				const hour = _mins / 60 % 12;
 
 				// Draw rim
@@ -144,6 +149,8 @@
 
 			}
 		}
+		ctx.restore();
+		requestAnimationFrame(loop);
 	}
 
 	loop();
